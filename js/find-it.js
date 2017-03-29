@@ -70,7 +70,7 @@ function getData(uri, parent_selector, iterator) {
         getData(data["resource"]["ref"], parent_selector);
       } else if (data["jsonmodel_type"] == "location") {
         displayData("#location_"+parent_selector+"_"+iterator, data["title"]);
-        displayData("#"+parent_selector+" .button"+iterator, '<button id="locationCopy'+iterator+'" class="btn btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'">Copy Location</button>');
+        displayData("#"+parent_selector+" .button"+iterator, '<button id="locationCopy'+iterator+'" class="btn btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'" onclick="ga('send', 'event', 'copy', 'click', 'button');">Copy Location</button>');
       }
     }
   });
