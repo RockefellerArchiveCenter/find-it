@@ -70,7 +70,17 @@ function getData(uri, parent_selector, iterator) {
         getData(data["resource"]["ref"], parent_selector);
       } else if (data["jsonmodel_type"] == "location") {
         displayData("#location_"+parent_selector+"_"+iterator, data["title"]);
-        displayData("#"+parent_selector+" .button"+iterator, '<button id="locationCopy'+iterator+'" class="btn btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'" onclick="ga(\'send\', \'event\', \'copy\', \'click\', \'button\');">Copy Location</button>');
+        displayData("#"+parent_selector+" .button"+iterator, '<button id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'" onclick="ga(\'send\', \'event\', \'copy\', \'click\', \'button\');">Copy Location</button>');
+      } else if (data["jsonmodel_type"] == "top_container") {
+        var box = capitalize(data["type"]) + " " + data["indicator"]
+        displayData("#"+parent_selector+" .instance"+iterator, box);
+        if (data["container_locations"].length) {
+          for (i=0; i<data["container_locations"].length; i++) {
+            handleLocations(data["container_locations"], parent_selector, i)
+          }
+        } else {
+          displayData("#location_"+parent_selector+"_"+iterator, "No location found");
+        }
       }
     }
   });
@@ -82,19 +92,9 @@ function handleInstances(data, parent_selector) {
   for (i = 0; i < data.length; i++) {
     if (data[i]["instance_type"] !== "digital_object") {
       $("#"+parent_selector+" .instances").append("<h4 class=instance"+parseInt(i)+"/><p id=location_"+parent_selector+"_"+parseInt(i)+"/><div class=button"+parseInt(i)+"/>");
-      var container = data[i]["container"];
-      var instanceLength = countInstanceTypes(container);
-      var instance = [];
-      for (n = 1; n <= instanceLength; n++) {
-        instance.push(capitalize(container["type_" + n]) + " " + container["indicator_" + n]);
-      }
-      completeInstance = instance.join(", ");
-      displayData("#"+parent_selector+" .instance"+i, completeInstance);
-      if (container["container_locations"].length >= 1) {
-        handleLocations(container["container_locations"], parent_selector, i);
-      }
-      else if (container["container_locations"].length < 1){
-        displayData("#location_"+parent_selector+"_"+i, "No location found");
+      var container = data[i]["sub_container"];
+      if (container["top_container"]["ref"].length >= 1) {
+        getData(container["top_container"]["ref"], parent_selector, i)
       }
     }
   }
