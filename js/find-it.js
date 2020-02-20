@@ -69,7 +69,6 @@ function getData(uri, parent_selector, iterator) {
         }
         getData(data["resource"]["ref"], parent_selector);
       } else if (data["jsonmodel_type"] == "location") {
-        console.log(data)
         displayData("#location_"+parent_selector+"_"+iterator, data["title"]);
         if (data["building"] != "Rockefeller Archive Center") {
           var short_location = [data["building"], data["room"].trim().replace("Vault", ""), data["coordinate_1_indicator"].trim(), data["coordinate_2_indicator"].trim()].join(".")
@@ -77,8 +76,8 @@ function getData(uri, parent_selector, iterator) {
           var short_location = [data["room"].trim().replace("Vault", ""), data["coordinate_1_indicator"].trim(), data["coordinate_2_indicator"].trim()].join(".")
         }
         displayData("#short_location_"+parent_selector+"_"+iterator, short_location);
-        displayData("#"+parent_selector+" .button"+iterator, '<button style="margin-right:1em;" id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'" onclick="ga(\'send\', \'event\', \'copy\', \'click\', \'button\');">Copy Location</button>');
-        displayData("#"+parent_selector+" .button"+iterator, '<button id="shortLocationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#short_location_'+parent_selector+"_"+iterator+'" onclick="ga(\'send\', \'event\', \'copy\', \'click\', \'button\');">Copy Short Location</button>');
+        displayData("#"+parent_selector+" .button"+iterator, '<button style="margin-right:.5em;" id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'">Copy Location</button>');
+        displayData("#"+parent_selector+" .button"+iterator, '<button id="shortLocationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#short_location_'+parent_selector+"_"+iterator+'">Copy Short Location</button>');
       } else if (data["jsonmodel_type"] == "top_container") {
         var box = capitalize(data["type"]) + " " + data["indicator"]
         displayData("#"+parent_selector+" .instance"+iterator, box);
