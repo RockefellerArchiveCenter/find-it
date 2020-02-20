@@ -70,7 +70,14 @@ function getData(uri, parent_selector, iterator) {
         getData(data["resource"]["ref"], parent_selector);
       } else if (data["jsonmodel_type"] == "location") {
         displayData("#location_"+parent_selector+"_"+iterator, data["title"]);
-        displayData("#"+parent_selector+" .button"+iterator, '<button id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'">Copy Location</button>');
+        if (data["building"] != "Rockefeller Archive Center") {
+          var short_location = [data["building"], data["room"].trim().replace("Vault", ""), data["coordinate_1_indicator"].trim(), data["coordinate_2_indicator"].trim()].join(".")
+        } else {
+          var short_location = [data["room"].trim().replace("Vault", ""), data["coordinate_1_indicator"].trim(), data["coordinate_2_indicator"].trim()].join(".")
+        }
+        displayData("#short_location_"+parent_selector+"_"+iterator, short_location);
+        displayData("#"+parent_selector+" .button"+iterator, '<button style="margin-right:.5em;" id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'">Copy Location</button>');
+        displayData("#"+parent_selector+" .button"+iterator, '<button id="shortLocationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#short_location_'+parent_selector+"_"+iterator+'">Copy Short Location</button>');
       } else if (data["jsonmodel_type"] == "top_container") {
         var box = capitalize(data["type"]) + " " + data["indicator"]
         displayData("#"+parent_selector+" .instance"+iterator, box);
@@ -91,7 +98,7 @@ function handleInstances(data, parent_selector) {
   var list = '';
   for (i = 0; i < data.length; i++) {
     if (data[i]["instance_type"] !== "digital_object") {
-      $("#"+parent_selector+" .instances").append("<h4 class=instance"+parseInt(i)+"/><p id=location_"+parent_selector+"_"+parseInt(i)+"/><div class=button"+parseInt(i)+"/>");
+      $("#"+parent_selector+" .instances").append("<h4 class=instance"+parseInt(i)+"/><p id=location_"+parent_selector+"_"+parseInt(i)+"/><p id=short_location_"+parent_selector+"_"+parseInt(i)+"/><div class=button"+parseInt(i)+"/>");
       var container = data[i]["sub_container"];
       if (container["top_container"]["ref"].length >= 1) {
         getData(container["top_container"]["ref"], parent_selector, i)
