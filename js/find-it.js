@@ -79,6 +79,7 @@ function getData(uri, parent_selector, iterator) {
         displayData("#"+parent_selector+" .button"+iterator, '<button style="margin-right:.5em;" id="locationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#location_'+parent_selector+"_"+iterator+'">Copy Location</button>');
         displayData("#"+parent_selector+" .button"+iterator, '<button id="shortLocationCopy'+iterator+'" class="btn btn-default btn-small" data-clipboard-target="#short_location_'+parent_selector+"_"+iterator+'">Copy Short Location</button>');
       } else if (data["jsonmodel_type"] == "top_container") {
+        getData(data["container_profile"]["ref"], parent_selector, iterator)
         var box = capitalize(data["type"]) + " " + data["indicator"]
         displayData("#"+parent_selector+" .instance"+iterator, box);
         if (data["container_locations"].length) {
@@ -88,6 +89,9 @@ function getData(uri, parent_selector, iterator) {
         } else {
           displayData("#location_"+parent_selector+"_"+iterator, "No location found");
         }
+      } else if (data["jsonmodel_type"] == "container_profile") {
+        console.log(data)
+        displayData("#"+parent_selector+" .instance"+iterator, " <small>"+data["name"]+"</small>")
       }
     }
   });
